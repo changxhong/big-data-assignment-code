@@ -1,6 +1,6 @@
 # big-data-assignment-code
 
-# NYC Taxi Data Processing with Python (Rate Code Replacement)
+# NYC Taxi Data Processing with Python
 
 This project processes the **NYC Yellow Taxi Trip dataset** by replacing coded values in key columns with human-readable descriptions. It is designed to handle large CSV files (12+ million rows) using Python, and outputs a cleaned dataset suitable for analysis or visualization.
 
