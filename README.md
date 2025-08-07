@@ -10,7 +10,7 @@ This project processes the **NYC Yellow Taxi Trip dataset** by replacing coded v
 
 - **Source**: https://www.kaggle.com/datasets/elemento/nyc-yellow-taxi-trip-data
 - **File Used**: `yellow_tripdata_2025-01.csv`
-- **Size**: ~1.2 GB
+- **Size**: ~1.85 GB
 - **Total Records**: ~12.7 million
 
 ---
