@@ -1,0 +1,54 @@
+sudo su - hadoop
+wget -O /home/hadoop/yellow_tripdata_2015_cleaned.csv "https://www.dropbox.com/scl/fi/yt8bb26gvcpak580sposl/yellow_tripdata_2015_cleaned.csv?rlkey=xkj0nuwghnfvryyb9zq2wedt7&st=rzbnfstf&dl=1"
+nano nyc_taxi_analysis.py
+
+==============PYTHON FILE================
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, sum as _sum, count, format_number
+import time
+
+# Initialize Spark Session
+spark = SparkSession.builder \
+    .appName("NYC Taxi Analysis") \
+    .getOrCreate()
+
+# Read dataset from local disk (avoiding HDFS)
+file_path = "file:///home/hadoop/yellow_tripdata_2015_cleaned.csv"
+
+print("Reading dataset...")
+df = spark.read.option("header", "true").option("inferSchema", "true").csv(file_path)
+df.cache()
+
+# Total Revenue by Vendor
+start_time = time.time()
+total_revenue = df.groupBy("VendorID") \
+    .agg(_sum("total_amount").alias("TotalRevenue")) \
+    .withColumn("TotalRevenue", format_number("TotalRevenue", 2))
+print("\nTotal Revenue by Vendor:")
+total_revenue.show(truncate=False)
+print("Execution time (Revenue): {:.2f} sec".format(time.time() - start_time))
+
+# Frequency of Payment Type
+start_time = time.time()
+payment_freq = df.groupBy("payment_type") \
+    .agg(count("*").alias("Frequency"))
+print("\nPayment Type Frequency:")
+payment_freq.show(truncate=False)
+print("Execution time (Payment): {:.2f} sec".format(time.time() - start_time))
+
+# Total Distance by Vendor
+start_time = time.time()
+total_distance = df.groupBy("VendorID") \
+    .agg(_sum("trip_distance").alias("TotalDistance")) \
+    .withColumn("TotalDistance", format_number("TotalDistance", 2))
+print("\nTotal Distance by Vendor:")
+total_distance.show(truncate=False)
+print("Execution time (Distance): {:.2f} sec".format(time.time() - start_time))
+
+# Stop Spark
+spark.stop()
+
+==============QUIT PYTHON FILE================
+spark-submit nyc_taxi_analysis.py
+
+
