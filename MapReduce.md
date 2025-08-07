@@ -1,34 +1,62 @@
-
 ## 📁 Running MapReduce Tasks (Revenue, Payment Type, Distance)
-
 This project uses **Hadoop Streaming** and **Python scripts** to run 3 MapReduce jobs on the NYC Taxi dataset.
 
-### 🚀 Step-by-Step Instructions
+## ⚙️ Hadoop Setup Requirements
+
+- Hadoop installed and configured on an EC2 instance
+- Java installed
+- HDFS and YARN running:
+  ```bash
+  start-dfs.sh
+  start-yarn.sh
+````
 
 ---
 
-### 1️⃣ Upload Cleaned CSV to HDFS
+## 📁 Folder Structure
 
-```bash
-# Create directory
-hdfs dfs -mkdir -p /user/hadoop/nyctaxi
-
-# Upload the cleaned CSV
-hdfs dfs -put yellow_tripdata_2015_cleaned.csv /user/hadoop/nyctaxi/
+```
+nyctaxi_project/
+└── mapreduce_jobs/
+    ├── unified_mapper.py
+    ├── unified_reducer.py
+    └── yellow_tripdata_cleaned.csv
 ```
 
 ---
+## 1️⃣ Setup
 
-### 2️⃣ Make Python Scripts Executable
+1. **Navigate to project folder**
 
-```bash
-chmod +x unified_mapper.py
-chmod +x unified_reducer.py
-```
+   ```bash
+   cd /home/hadoop/nyctaxi_project/mapreduce_jobs
+   ```
 
----
+2. **Download the dataset**
 
-### 3️⃣ Run Each MapReduce Task
+   ```bash
+   wget "https://www.dropbox.com/s/your_file_id/yellow_tripdata_cleaned.csv?dl=1" -O yellow_tripdata_cleaned.csv
+   ```
+
+3. **Upload dataset to HDFS**
+
+   ```bash
+   hdfs dfs -mkdir -p /user/hadoop/nyctaxi
+   hdfs dfs -put yellow_tripdata_cleaned.csv /user/hadoop/nyctaxi/
+   ```
+
+4. **Create mapper and reducer**
+
+   * `unified_mapper.py`: handles "revenue", "distance", and "payment"
+   * `unified_reducer.py`: aggregates totals or frequencies
+
+5. **Make Python scripts executable**
+
+   ```bash
+   chmod +x unified_mapper.py unified_reducer.py
+   ```
+
+### 2️⃣ Run Each MapReduce Task
 
 ---
 
@@ -80,7 +108,7 @@ hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming*.jar \
 
 ---
 
-### 4️⃣ View Output Files in HDFS
+### 3️⃣ View Output Files in HDFS
 
 ```bash
 hdfs dfs -cat /user/hadoop/output/revenue_by_vendor/part-00000
