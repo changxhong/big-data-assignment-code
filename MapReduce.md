@@ -9,9 +9,7 @@ This project uses **Hadoop Streaming** and **Python scripts** to run 3 MapReduce
   ```bash
   start-dfs.sh
   start-yarn.sh
-````
-
----
+  ```
 
 ## 📁 Folder Structure
 
